@@ -1,0 +1,15 @@
+{
+  "extends": "./playground/.nuxt/tsconfig.json",
+  "exclude": [
+    "dist",
+    "node_modules",
+    "playground"
+  ],
+  "compilerOptions": {
+    "types": [
+      "@types/node",
+      "@nuxt/types",
+      "nuxt-multilinguist"
+    ]
+  }
+}
