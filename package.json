@@ -1,24 +1,18 @@
 {
-  "name": "@nuxtjs/multilinguist",
-  "version": "1.0.0",
+  "name": "@yiiamee/multilinguist",
+  "version": "1.0.14",
   "description": "Nuxt 3 Multilinguist Localization module",
   "repository": "yiiameeMich/multilinguist",
   "license": "MIT",
   "type": "module",
+  "main": "./dist/module.mjs",
   "exports": {
     ".": {
-      "types": "./dist/types.d.mts",
-      "import": "./dist/module.mjs"
+      "import": "./dist/module.mjs",
+      "types": "./dist/types.d.mts"
     }
   },
-  "main": "./dist/module.mjs",
-  "typesVersions": {
-    "*": {
-      ".": [
-        "./dist/types.d.mts"
-      ]
-    }
-  },
+  "types": "./dist/types.d.mts",
   "files": [
     "dist"
   ],
@@ -31,7 +25,11 @@
     "lint": "eslint .",
     "test": "vitest run",
     "test:watch": "vitest watch",
-    "test:types": "vue-tsc --noEmit && cd playground && vue-tsc --noEmit"
+    "test:types": "vue-tsc --noEmit && cd playground && vue-tsc --noEmit",
+    "build": "vite build"
+  },
+  "peerDependencies": {
+    "nuxt": "^3.0.0"
   },
   "dependencies": {
     "@nuxt/kit": "^3.17.4"

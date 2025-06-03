@@ -1,7 +1,8 @@
+import { defineNuxtPlugin } from "#app";
 import useLocalization, { type TranslationMap, type Locale } from "../runtime/composables/useLocalization";
 
 export default defineNuxtPlugin(async nuxtApp => {
-  const config = useRuntimeConfig().public.multilinguist || {
+  const config = nuxtApp.$config.public.multilinguist || {
     defaultLocale: "en",
     supportedLanguages: ["en"],
   };

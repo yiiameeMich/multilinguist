@@ -1,5 +1,5 @@
 export default defineNuxtConfig({
-  modules: ['../src/index'],
+  modules: ['../src/module'],
   multilinguist: {
     defaultLocale: "en",
     supportedLanguages: ["en", "es"],

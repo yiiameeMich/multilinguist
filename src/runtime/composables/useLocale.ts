@@ -1,4 +1,6 @@
 import type { Locale, TranslationMap } from "./useLocalization";
+import { computed } from "vue";
+import {useRequestHeaders} from "nuxt/app";
 
 export default function useLocale<const T extends TranslationMap>(supportedLanguages: T, defaultLocale: Locale<T>) {
   const locale = computed(() => {

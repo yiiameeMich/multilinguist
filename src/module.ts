@@ -3,14 +3,14 @@ import GenerateLocaleKeysPlugin from "./vite-generate-keys";
 
 export default defineNuxtModule({
   meta: {
-    name: "multilinguist",
+    name: "@yiiamee/multilinguist",
     configKey: "multilinguist",
     version: "0.0.1",
   },
   setup(moduleOptions, nuxtApp) {
     const resolver = createResolver(import.meta.url);
 
-    addPlugin(resolver.resolve("./runtime/plugin"));
+    addPlugin(resolver.resolve("runtime/plugin"));
     addImportsDir(resolver.resolve("runtime/composables"));
 
     addTypeTemplate({

@@ -1,4 +1,6 @@
 import useLocale from "../composables/useLocale";
+import {useCookie, useState} from "nuxt/app";
+import {computed, watch, type Ref} from "vue";
 import type {LocaleKey, TranslationMessages} from "../types/generated-locales";
 
 export type TranslationMap = readonly string[];
@@ -20,12 +22,21 @@ export default function useLocalization<const T extends TranslationMap>(
   const userSelectedLocale = useCookie("multilinguist-locale", {default: () => defaultLocale});
   const {locale: userBrowserLocale} = useLocale(supportedLanguages, defaultLocale);
 
+  const localeFiles: Record<string, {
+    default: LocaleKeys<T>
+  }> = import.meta.glob('@/public/locales/*.json', {eager: true});
+
   const loadedLanguages = useState<Partial<Record<Locale<T>, LocaleKeys<T>>>>("loaded-languages", () => ({}));
 
-  const loadDefaultLocale = async () => {
-    if (!loadedLanguages.value[defaultLocale]) {
-      const messages = await import(`@/public/locales/${defaultLocale}.json`);
-      loadedLanguages.value[defaultLocale] = messages.default;
+  const loadLocaleMessages = async (locale: Locale<T>) => {
+    if (!loadedLanguages.value[locale]) {
+      const fileKey = `/public/locales/${locale}.json`;
+      const messages: { default: LocaleKeys<T> } = localeFiles[fileKey];
+      if (messages) {
+        loadedLanguages.value[locale] = messages?.default;
+      } else {
+        throw new Error(`Locale file ${fileKey} not found`);
+      }
     }
   };
 
@@ -45,10 +56,7 @@ export default function useLocalization<const T extends TranslationMap>(
 
   const setLocale = async (newLocale: Locale<T>) => {
     if (!loadedLanguages.value[newLocale] && supportedLanguages.includes(newLocale)) {
-      const loadedLocale: LocaleKeys<T> = await import(`@/public/locales/${newLocale}.json`).then(
-        module => module.default || module,
-      );
-      loadedLanguages.value[newLocale] = loadedLocale;
+      await loadLocaleMessages(newLocale);
     }
 
     userSelectedLocale.value = newLocale;
@@ -56,7 +64,7 @@ export default function useLocalization<const T extends TranslationMap>(
   };
 
   const initLocalization = async () => {
-    await loadDefaultLocale();
+    await loadLocaleMessages(defaultLocale);
     await setLocale(userPrefferableLocale.value);
   };
 

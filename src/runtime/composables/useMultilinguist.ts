@@ -1,4 +1,5 @@
-import type { TranslationMap, TMultilinguistResponse } from "./useLocalization";
+import type {TranslationMap, TMultilinguistResponse} from "./useLocalization";
+import {useNuxtApp} from "nuxt/app";
 
 export default function useMultilinguist() {
   const nuxtApp = useNuxtApp();
@@ -8,5 +9,5 @@ export default function useMultilinguist() {
     throw new Error("Localization plugin not initialized");
   }
 
-  return { ...localization };
+  return {...localization};
 }
