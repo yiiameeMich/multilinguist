@@ -10,12 +10,13 @@ export default defineNuxtPlugin(async nuxtApp => {
   const supportedLanguages = config.supportedLanguages as TranslationMap;
   const defaultLocale = config.defaultLocale as Locale<TranslationMap>;
 
-  const localization = useLocalization(supportedLanguages, defaultLocale);
+  const { initLocalization, ...localizationProperties } = useLocalization(supportedLanguages, defaultLocale);
 
-  await localization.initLocalization();
+  await initLocalization();
 
-  console.log("[multilinguist] is initialised", config.supportedLanguages, config.defaultLocale);
-  nuxtApp.provide("localization", localization);
-  nuxtApp.provide("t", localization.t);
-  nuxtApp._localization = localization;
+  console.log("[multilinguist] is initialised");
+
+  nuxtApp.provide("localization", localizationProperties);
+  nuxtApp.provide("t", localizationProperties.t);
+  nuxtApp._localization = localizationProperties;
 });
