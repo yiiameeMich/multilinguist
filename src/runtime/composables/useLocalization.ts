@@ -19,8 +19,11 @@ export default function useLocalization<const T extends TranslationMap>(
   supportedLanguages: T,
   defaultLocale: Locale<T>,
 ): TMultilinguistResponse<T> {
-  const userSelectedLocale = useCookie("multilinguist-locale", {default: () => defaultLocale});
   const {locale: userBrowserLocale} = useLocale(supportedLanguages, defaultLocale);
+
+  const userSelectedLocale = useCookie("multilinguist-locale", {
+    default: () => supportedLanguages.includes(userBrowserLocale.value) ? userBrowserLocale.value : defaultLocale
+  });
 
   const localeFiles: Record<string, {
     default: LocaleKeys<T>
