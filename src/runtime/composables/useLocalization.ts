@@ -53,7 +53,7 @@ export default function useLocalization<const T extends TranslationMap>(
 
     let translatedText = messages?.[key] ?? key;
 
-    if (key.includes(".")) {
+    if (key.includes(".") && !messages?.[key]) {
       const nestedKeyArray = key.split(".") as LocaleKey[];
       translatedText = nestedKeyArray.reduce((acc, key) => acc?.[key], messages);
     }
