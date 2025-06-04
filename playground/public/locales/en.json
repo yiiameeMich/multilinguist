@@ -1,4 +1,12 @@
 {
   "Hello, World": "Hello, World",
-  "Switch Locale": "Switch Locale"
+  "Switch Locale": "Switch Locale",
+  "Paste your variable here": "Here is your variable: {variable}",
+  "nested": {
+    "Nested key": "Nested key",
+    "Language": "English",
+    "nested second level": {
+      "nested second level language": "test english"
+    }
+  }
 }

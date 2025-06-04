@@ -6,6 +6,9 @@ export default defineNuxtModule({
     name: "@yiiamee/multilinguist",
     configKey: "multilinguist",
     version: "0.0.1",
+    compatibility: {
+      nuxt: "^3.14.0",
+    },
   },
   setup(moduleOptions, nuxtApp) {
     const resolver = createResolver(import.meta.url);

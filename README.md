@@ -1,6 +1,6 @@
 # Nuxt MultiLinguist module
 
-Multilinguist is simple, but smoothly working module for easy and seamless localization implementation in Nuxt 3. 
+Multilinguist is a simple but smoothly working module for easy and seamless localization implementation for Nuxt applications. 
 
 ## Key Features
 
@@ -35,11 +35,13 @@ Then, create a "locales" directory in /public directory. This is necessary for m
 
 Now, you're ready to use Multilinguist Module!
 
+# Usage
+
 ### t()—famous translate function 
  
 ```vue
 <script setup lang="ts">
-const { t } = useMultilinguist(); // Call useMultilinguist composable to get the translate function
+const { t } = useMultilinguist(); // Call useMultilinguist composable to get the translation function
   
 const pageTitle = computed(() => {
   return t("Hello, World");
@@ -52,7 +54,43 @@ const pageTitle = computed(() => {
 </template>
 ```
 
-You can already see how the keys auto-completion works:
+It also supports nested keys and dynamic keys with variables;
+you only need to pass the second argument, an object with used in the key variables: 
+
+```vue
+<template>
+  <span>{{ t("Paste your variable here", { variable: locale }) }}</span>
+</template>
+```
+
+And your JSON must look like that:
+
+```json
+{
+  "Paste your variable here": "Here is your variable: {variable}"
+}
+```
+
+```vue
+<script setup lang="ts">
+const { t } = useMultilinguist(); // Call useMultilinguist composable to get the translation function
+  
+const pageTitle = computed(() => {
+  return t("Hello, World");
+});
+</script> 
+
+<template>
+  <h3>{{ pageTitle }}</h3>
+  <button>{{ t("Switch Locale") }}</button>
+  <br />
+  <span>{{ t("Paste your variable here", { variable: locale }) }}</span>
+  <br />
+  <h1>{{ t("nested.Nested key") }}: <span>{{ t("nested.Language") }}</span></h1>
+</template>
+```
+
+You can already see how keys auto-completion works:
 
 ![autocompletion.png](autocompletion.png)
 
@@ -60,12 +98,12 @@ And validation:
 
 ![validation.png](validation.png)
 
-### Set another value to current locale:
+### Set another value to the current locale:
 
 ```vue
 <script setup lang="ts">
 const { t, setLocale } = useMultilinguist();
-// setLocale function accepts string, that should match one of defined
+// setLocale function accepts a string that should match one of defined
 // in the nuxt.config strings from supportedLanguages array
   
 const pageTitle = computed(() => {

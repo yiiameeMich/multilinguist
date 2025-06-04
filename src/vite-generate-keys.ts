@@ -2,17 +2,31 @@ import fs from "fs";
 import path from "path";
 import type {Plugin} from "vite";
 
-export default function GenerateLocaleKeysPlugin(defaultLocaleFromConfig: string, localesPath: string, outPath: string): Plugin {
+function flattenKeys(obj: Record<string, any>, prefix = ""): string[] {
+  return Object.entries(obj).flatMap(([key, value]) => {
+    const fullKey = prefix ? `${prefix}.${key}` : key;
+    if (typeof value === "object" && value !== null) {
+      return flattenKeys(value, fullKey);
+    }
+    return [fullKey];
+  });
+}
+
+export default function GenerateLocaleKeysPlugin(
+  defaultLocaleFromConfig: string,
+  localesPath: string,
+  outPath: string
+): Plugin {
   async function generateTypes() {
     const defaultLocalePath = path.join(localesPath, `${defaultLocaleFromConfig}.json`);
 
     if (!fs.existsSync(defaultLocalePath)) {
-      console?.error(`Default locale file not found: ${defaultLocalePath}`);
+      console?.error(`❌ Default locale file not found: ${defaultLocalePath}`);
       return;
     }
 
     const json = JSON.parse(fs.readFileSync(defaultLocalePath, "utf-8"));
-    const keys = Object.keys(json);
+    const keys = flattenKeys(json);
 
     const output = [
       `// AUTO-GENERATED FILE — DO NOT EDIT MANUALLY`,
@@ -26,7 +40,7 @@ export default function GenerateLocaleKeysPlugin(defaultLocaleFromConfig: string
     fs.mkdirSync(path.dirname(outPath), {recursive: true});
     fs.writeFileSync(outPath, output, "utf-8");
 
-    console?.warn(`Generated types/generated-locales.d.ts from ${defaultLocalePath}`);
+    console?.warn(`✅ Generated types to ${outPath} from ${defaultLocalePath}`);
   }
 
   return {

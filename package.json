@@ -1,6 +1,6 @@
 {
   "name": "@yiiamee/multilinguist",
-  "version": "1.1.1",
+  "version": "1.2.0",
   "description": "Nuxt 3 Multilinguist Localization module",
   "repository": "yiiameeMich/multilinguist",
   "license": "MIT",
@@ -16,6 +16,10 @@
   "files": [
     "dist"
   ],
+  "keywords": ["localization", "nuxt localization", "nuxt", "internationalization", "languages", "locales", "translation"],
+  "bugs": {
+    "email": "michaelkukh.dev@gmail.com"
+  },
   "scripts": {
     "prepack": "nuxt-module-build build",
     "dev": "nuxi dev playground",
