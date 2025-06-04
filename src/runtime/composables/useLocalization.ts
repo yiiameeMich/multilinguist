@@ -9,7 +9,7 @@ export type Locale<T extends TranslationMap> = T[number];
 export type LocaleKeys<T extends TranslationMap> = T[keyof T];
 
 export type TMultilinguistResponse<T extends TranslationMap> = {
-  t: (key: LocaleKey, variables?: Record<string, string>) => string;
+  t<const K extends LocaleKey>(key: K, variables?: Record<string, string>): string;
   setLocale: (locale: Locale<T>) => void;
   initLocalization: () => Promise<void>;
   locale: Ref<Locale<T>>;
@@ -51,7 +51,7 @@ export default function useLocalization<const T extends TranslationMap>(
     return userPrefferableLocale.value || defaultLocale;
   });
 
-  const t = (key: LocaleKey, variables?: Record<string, string>) => {
+  const t = <const K extends LocaleKey>(key: K, variables?: Record<string, string>): string => {
     const messages = loadedLanguages.value[locale.value] as TranslationMessages;
 
     let translatedText = messages?.[key] ?? key;

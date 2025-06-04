@@ -35,6 +35,21 @@ export default function GenerateLocaleKeysPlugin(
       `}`,
       ``,
       `export type LocaleKey = keyof TranslationMessages;`,
+      ``,
+      `declare module '#app' {`,
+      `  interface NuxtApp {`,
+      "    $t<const K extends LocaleKey>(key: K, variables?: Record<string, string>): string; ",
+      "    t<const K extends LocaleKey>(key: K, variables?: Record<string, string>): string; ",
+      `  }`,
+      `}`,
+      ``,
+      `declare module 'vue' {`,
+      `  interface ComponentCustomProperties {`,
+      "    $t<const K extends LocaleKey>(key: K, variables?: Record<string, string>): string; ",
+      "    t<const K extends LocaleKey>(key: K, variables?: Record<string, string>): string; ",
+      `  }`,
+      `}`,
+      ``,
     ].join("\n");
 
     fs.mkdirSync(path.dirname(outPath), {recursive: true});

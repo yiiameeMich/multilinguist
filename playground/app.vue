@@ -16,4 +16,4 @@ const switchLocale = () => {
   <br />
   <h1>{{ t("nested.Nested key") }}: <span>{{ t("nested.Language") }}</span></h1>
   <h1>{{ t("nested.nested second level.nested second level language") }}</h1>
-</template>
+</template>t

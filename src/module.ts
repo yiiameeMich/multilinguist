@@ -1,13 +1,13 @@
-import {addPlugin, createResolver, defineNuxtModule, addImportsDir, addTypeTemplate} from "@nuxt/kit";
+import { addPlugin, createResolver, defineNuxtModule, addImportsDir } from "@nuxt/kit";
 import GenerateLocaleKeysPlugin from "./vite-generate-keys";
 
 export default defineNuxtModule({
   meta: {
     name: "@yiiamee/multilinguist",
     configKey: "multilinguist",
-    version: "0.0.1",
+    version: "1.2.7",
     compatibility: {
-      nuxt: "^3.14.0",
+      nuxt: "^3.0.0",
     },
   },
   setup(moduleOptions, nuxtApp) {
@@ -15,25 +15,6 @@ export default defineNuxtModule({
 
     addPlugin(resolver.resolve("runtime/plugin"));
     addImportsDir(resolver.resolve("runtime/composables"));
-
-    addTypeTemplate({
-      filename: 'types/multilinguist.d.ts',
-      getContents: () => `
-        import type { TranslationMessages } from './generated-locales'
-
-        declare module '#app' {
-          interface NuxtApp {
-            $t: (key: keyof TranslationMessages) => string
-          }
-        }
-
-        declare module 'vue' {
-          interface ComponentCustomProperties {
-            $t: (key: keyof TranslationMessages) => string
-          }
-        }
-      `,
-    });
 
     nuxtApp.hook("vite:extendConfig", viteConfig => {
       viteConfig.plugins = viteConfig.plugins || [];
@@ -43,9 +24,6 @@ export default defineNuxtModule({
     nuxtApp.hook("prepare:types", ({references}) => {
       references.push({
         path: resolver.resolve("./runtime/types/generated-locales.d.ts"),
-      });
-      references.push({
-        path: resolver.resolve("./runtime/types/multilinguist.d.ts"),
       });
     });
 
