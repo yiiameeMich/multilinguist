@@ -1,6 +1,6 @@
 import fs from "fs";
 import path from "path";
-import type {Plugin} from "vite";
+import type { Plugin } from "vite";
 
 function flattenKeys(obj: Record<string, any>, prefix = ""): string[] {
   return Object.entries(obj).flatMap(([key, value]) => {
@@ -12,10 +12,49 @@ function flattenKeys(obj: Record<string, any>, prefix = ""): string[] {
   });
 }
 
+const generateOutputString = (func: Function) => {
+  return `
+// AUTO-GENERATED FILE — DO NOT EDIT MANUALLY
+
+export interface TranslationMessages {
+${func()}
+}
+
+export type LocaleKey = keyof TranslationMessages;
+
+export type TFunction = <K extends LocaleKey>(
+  key: K,
+  variables?: Record<string, string>
+) => string;
+
+declare global {
+  type LocaleKey = keyof TranslationMessages;
+  type TFunction = <K extends LocaleKey>(
+    key: K,
+    variables?: Record<string, string>
+  ) => string;
+}
+
+declare module '#app' {
+  interface NuxtApp {
+    $t: TFunction;
+    t: TFunction;
+  }
+}
+
+declare module 'vue' {
+  interface ComponentCustomProperties {
+    $t: TFunction;
+    t: TFunction;
+  }
+}
+`;
+};
+
 export default function GenerateLocaleKeysPlugin(
   defaultLocaleFromConfig: string,
   localesPath: string,
-  outPath: string
+  outPath: string,
 ): Plugin {
   async function generateTypes() {
     const defaultLocalePath = path.join(localesPath, `${defaultLocaleFromConfig}.json`);
@@ -28,31 +67,9 @@ export default function GenerateLocaleKeysPlugin(
     const json = JSON.parse(fs.readFileSync(defaultLocalePath, "utf-8"));
     const keys = flattenKeys(json);
 
-    const output = [
-      `// AUTO-GENERATED FILE — DO NOT EDIT MANUALLY`,
-      `export interface TranslationMessages {`,
-      ...keys.map(key => `  ${JSON.stringify(key)}: string;`),
-      `}`,
-      ``,
-      `export type LocaleKey = keyof TranslationMessages;`,
-      ``,
-      `declare module '#app' {`,
-      `  interface NuxtApp {`,
-      "    $t<const K extends LocaleKey>(key: K, variables?: Record<string, string>): string; ",
-      "    t<const K extends LocaleKey>(key: K, variables?: Record<string, string>): string; ",
-      `  }`,
-      `}`,
-      ``,
-      `declare module 'vue' {`,
-      `  interface ComponentCustomProperties {`,
-      "    $t<const K extends LocaleKey>(key: K, variables?: Record<string, string>): string; ",
-      "    t<const K extends LocaleKey>(key: K, variables?: Record<string, string>): string; ",
-      `  }`,
-      `}`,
-      ``,
-    ].join("\n");
+    const output = generateOutputString(() => keys.map(key => `  ${JSON.stringify(key)}: string;`).join("\n"));
 
-    fs.mkdirSync(path.dirname(outPath), {recursive: true});
+    fs.mkdirSync(path.dirname(outPath), { recursive: true });
     fs.writeFileSync(outPath, output, "utf-8");
 
     console?.warn(`✅ Generated types to ${outPath} from ${defaultLocalePath}`);

@@ -5,7 +5,7 @@ export default defineNuxtModule({
   meta: {
     name: "@yiiamee/multilinguist",
     configKey: "multilinguist",
-    version: "1.2.7",
+    version: "1.2.8",
     compatibility: {
       nuxt: "^3.0.0",
     },
@@ -18,10 +18,16 @@ export default defineNuxtModule({
 
     nuxtApp.hook("vite:extendConfig", viteConfig => {
       viteConfig.plugins = viteConfig.plugins || [];
-      viteConfig.plugins.push(GenerateLocaleKeysPlugin(moduleOptions.defaultLocale, `${nuxtApp.options.rootDir}/public/locales`, resolver.resolve('./runtime/types/generated-locales.d.ts')));
+      viteConfig.plugins.push(
+        GenerateLocaleKeysPlugin(
+          moduleOptions.defaultLocale,
+          `${nuxtApp.options.rootDir}/public/locales`,
+          resolver.resolve("./runtime/types/generated-locales.d.ts"),
+        ),
+      );
     });
 
-    nuxtApp.hook("prepare:types", ({references}) => {
+    nuxtApp.hook("prepare:types", ({ references }) => {
       references.push({
         path: resolver.resolve("./runtime/types/generated-locales.d.ts"),
       });

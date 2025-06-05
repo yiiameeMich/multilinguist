@@ -9,7 +9,7 @@ export type Locale<T extends TranslationMap> = T[number];
 export type LocaleKeys<T extends TranslationMap> = T[keyof T];
 
 export type TMultilinguistResponse<T extends TranslationMap> = {
-  t<const K extends LocaleKey>(key: K, variables?: Record<string, string>): string;
+  t<K extends LocaleKey>(key: K, variables?: Record<string, string>): string;
   setLocale: (locale: Locale<T>) => void;
   initLocalization: () => Promise<void>;
   locale: Ref<Locale<T>>;

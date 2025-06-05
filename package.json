@@ -1,6 +1,6 @@
 {
   "name": "@yiiamee/multilinguist",
-  "version": "1.2.7",
+  "version": "1.2.8",
   "description": "Nuxt 3 Multilinguist Localization module",
   "repository": "yiiameeMich/multilinguist",
   "license": "MIT",
@@ -14,9 +14,21 @@
   },
   "types": "./dist/types.d.mts",
   "files": [
-    "dist"
+    "dist",
+    "runtime/types"
   ],
-  "keywords": ["localization", "nuxt localization", "nuxt", "internationalization", "languages", "locales", "translation"],
+  "keywords": [
+    "localization",
+    "nuxt localization",
+    "nuxt",
+    "internationalization",
+    "languages",
+    "locales",
+    "translation",
+    "localization nuxt",
+    "translation nuxt",
+    "nuxt translation"
+  ],
   "bugs": {
     "email": "michaelkukh.dev@gmail.com"
   },
@@ -36,7 +48,10 @@
     "nuxt": "^3.0.0"
   },
   "dependencies": {
-    "@nuxt/kit": "^3.17.4"
+    "@nuxt/kit": "^3.17.4",
+    "eslint-config-prettier": "^10.1.5",
+    "eslint-plugin-prettier": "^5.4.1",
+    "prettier": "^3.5.3"
   },
   "devDependencies": {
     "@nuxt/devtools": "^2.4.1",
