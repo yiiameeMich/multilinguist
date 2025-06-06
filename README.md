@@ -1,6 +1,7 @@
-# Nuxt MultiLinguist module
+# Nuxt Multilinguist module
 
-Multilinguist is a simple but smoothly working module for easy and seamless localization implementation for Nuxt applications. 
+Multilinguist is a simple but smoothly working module for easy and seamless localization implementation for Nuxt
+applications.
 
 ## Key Features
 
@@ -20,7 +21,7 @@ Then, add the module to your nuxt.config
 ```nuxt.config.ts
 export default defineNuxtConfig({
     modules: [
-        @yiiamee/multilinguist,
+        "@yiiamee/multilinguist",
     ],
     multilinguist: {
         defaultLocale: "en", // string representing key to your default (fallback) locale
@@ -35,18 +36,47 @@ Then, create a "locales" directory in /public directory. This is necessary for m
 
 Now, you're ready to use Multilinguist Module!
 
+After running your project, you can see the following warning:
+
+![vite-warning.png](vite-warning.png)
+
+**Dont be scared**, this is just a message from the module, indicating that your locales are typed, and that the module
+can properly perform type-checks and autocompletion.
+
+Also, on both SSR and CSR, you will see the following message:
+
+![initialized.png](initialized.png)
+
+It indicated that the module has been initialized successfully.
+
+To disable logs, you can set the logging option in your nuxt.config to false (by default, it is true):
+
+```nuxt.config.ts
+export default defineNuxtConfig({
+    modules: [
+        "@yiiamee/multilinguist",
+    ],
+    multilinguist: {
+        defaultLocale: "en",
+        supportedLanguages: ["en", "es"],
+        logging: false, // Boolean value to define if the module should send internal logs to console
+    },
+})
+```
+
 # Usage
 
-### t()—famous translate function 
- 
+### t()—famous translate function
+
 ```vue
+
 <script setup lang="ts">
-const { t } = useMultilinguist(); // Call useMultilinguist composable to get the translation function
-  
-const pageTitle = computed(() => {
-  return t("Hello, World");
-});
-</script> 
+  const { t } = useMultilinguist(); // Call useMultilinguist composable to get the translation function
+
+  const pageTitle = computed(() => {
+    return t("Hello, World");
+  });
+</script>
 
 <template>
   <h3>{{ pageTitle }}</h3>
@@ -55,9 +85,10 @@ const pageTitle = computed(() => {
 ```
 
 It also supports nested keys and dynamic keys with variables;
-you only need to pass the second argument, an object with used in the key variables: 
+you only need to pass the second argument, an object with used in the key variables:
 
 ```vue
+
 <template>
   <span>{{ t("Paste your variable here", { variable: locale }) }}</span>
 </template>
@@ -72,13 +103,14 @@ And your JSON must look like that:
 ```
 
 ```vue
+
 <script setup lang="ts">
-const { t } = useMultilinguist(); // Call useMultilinguist composable to get the translation function
-  
-const pageTitle = computed(() => {
-  return t("Hello, World");
-});
-</script> 
+  const { t } = useMultilinguist(); // Call useMultilinguist composable to get the translation function
+
+  const pageTitle = computed(() => {
+    return t("Hello, World");
+  });
+</script>
 
 <template>
   <h3>{{ pageTitle }}</h3>
@@ -101,15 +133,16 @@ And validation:
 ### Set another value to the current locale:
 
 ```vue
+
 <script setup lang="ts">
-const { t, setLocale } = useMultilinguist();
-// setLocale function accepts a string that should match one of defined
-// in the nuxt.config strings from supportedLanguages array
-  
-const pageTitle = computed(() => {
-  return t("Hello, World");
-});
-</script> 
+  const { t, setLocale } = useMultilinguist();
+  // setLocale function accepts a string that should match one of defined
+  // in the nuxt.config strings from supportedLanguages array
+
+  const pageTitle = computed(() => {
+    return t("Hello, World");
+  });
+</script>
 
 <template>
   <h3>{{ pageTitle }}</h3>
@@ -120,13 +153,14 @@ const pageTitle = computed(() => {
 ### Get current locale
 
 ```vue
-<script setup lang="ts">
-const { t, setLocale, locale } = useMultilinguist();
-// locale is SSR friendly, shared among the app ref state  
 
-const pageTitle = computed(() => {
+<script setup lang="ts">
+  const { t, setLocale, locale } = useMultilinguist();
+  // locale is SSR friendly, shared among the app ref state  
+
+  const pageTitle = computed(() => {
     return t("Hello, World");
-});
+  });
 </script>
 
 <template>

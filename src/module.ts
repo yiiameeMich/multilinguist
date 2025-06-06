@@ -5,9 +5,14 @@ export default defineNuxtModule({
   meta: {
     name: "@yiiamee/multilinguist",
     configKey: "multilinguist",
-    version: "1.2.8",
+    version: "1.3.0",
     compatibility: {
       nuxt: "^3.0.0",
+    },
+    defaults: {
+      logging: true,
+      defaultLocale: "",
+      supportedLanguages: [],
     },
   },
   setup(moduleOptions, nuxtApp) {
@@ -16,6 +21,12 @@ export default defineNuxtModule({
     addPlugin(resolver.resolve("runtime/plugin"));
     addImportsDir(resolver.resolve("runtime/composables"));
 
+    nuxtApp.options.runtimeConfig.public.multilinguist = {
+      defaultLocale: moduleOptions.defaultLocale,
+      supportedLanguages: moduleOptions.supportedLanguages,
+      logging: typeof moduleOptions.logging === "boolean" ? moduleOptions.logging : true,
+    };
+
     nuxtApp.hook("vite:extendConfig", viteConfig => {
       viteConfig.plugins = viteConfig.plugins || [];
       viteConfig.plugins.push(
@@ -23,6 +34,7 @@ export default defineNuxtModule({
           moduleOptions.defaultLocale,
           `${nuxtApp.options.rootDir}/public/locales`,
           resolver.resolve("./runtime/types/generated-locales.d.ts"),
+          moduleOptions.logging,
         ),
       );
     });
@@ -32,10 +44,5 @@ export default defineNuxtModule({
         path: resolver.resolve("./runtime/types/generated-locales.d.ts"),
       });
     });
-
-    nuxtApp.options.runtimeConfig.public.multilinguist = {
-      defaultLocale: moduleOptions.defaultLocale,
-      supportedLanguages: moduleOptions.supportedLanguages,
-    };
   },
 });

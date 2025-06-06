@@ -5,6 +5,7 @@ export default defineNuxtPlugin(async nuxtApp => {
   const config = nuxtApp.$config.public.multilinguist || {
     defaultLocale: "en",
     supportedLanguages: ["en"],
+    logging: true,
   };
 
   const supportedLanguages = config.supportedLanguages as TranslationMap;
@@ -14,7 +15,9 @@ export default defineNuxtPlugin(async nuxtApp => {
 
   await initLocalization();
 
-  console.log("[multilinguist] is initialised");
+  if (nuxtApp.$config.public.multilinguist.logging) {
+    console.log("[multilinguist] is initialised");
+  }
 
   nuxtApp.provide("localization", localizationProperties);
   nuxtApp.provide("t", localizationProperties.t);

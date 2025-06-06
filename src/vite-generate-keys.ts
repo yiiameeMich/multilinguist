@@ -55,6 +55,7 @@ export default function GenerateLocaleKeysPlugin(
   defaultLocaleFromConfig: string,
   localesPath: string,
   outPath: string,
+  logging: boolean = true,
 ): Plugin {
   async function generateTypes() {
     const defaultLocalePath = path.join(localesPath, `${defaultLocaleFromConfig}.json`);
@@ -72,7 +73,9 @@ export default function GenerateLocaleKeysPlugin(
     fs.mkdirSync(path.dirname(outPath), { recursive: true });
     fs.writeFileSync(outPath, output, "utf-8");
 
-    console?.warn(`✅ Generated types to ${outPath} from ${defaultLocalePath}`);
+    if (logging) {
+      console?.warn(`✅ Generated types to ${outPath} from ${defaultLocalePath}`);
+    }
   }
 
   return {
