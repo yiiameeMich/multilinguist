@@ -6,12 +6,18 @@ export default defineNuxtPlugin(async nuxtApp => {
     defaultLocale: "en",
     supportedLanguages: ["en"],
     logging: true,
+    setBrowserLanguage: true,
   };
 
   const supportedLanguages = config.supportedLanguages as TranslationMap;
   const defaultLocale = config.defaultLocale as Locale<TranslationMap>;
+  const shouldSetBrowserLanguage = config.setBrowserLanguage;
 
-  const { initLocalization, ...localizationProperties } = useLocalization(supportedLanguages, defaultLocale);
+  const { initLocalization, ...localizationProperties } = useLocalization(
+    supportedLanguages,
+    defaultLocale,
+    shouldSetBrowserLanguage,
+  );
 
   await initLocalization();
 

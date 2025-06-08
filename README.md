@@ -9,6 +9,7 @@ applications.
 - Works perfectly fine on both SSR + CSR
 - No memory leaks and running out of memory errors
 - Autocompletion & validation of keys
+- Autodetection of browser's locale
 
 ## Installation
 
@@ -49,7 +50,7 @@ Also, on both SSR and CSR, you will see the following message:
 
 It indicated that the module has been initialized successfully.
 
-To disable logs, you can set the logging option in your nuxt.config to false (by default, it is true):
+To disable logs, you can set the `logging` option in your nuxt.config to `false` (by default, it is `true`):
 
 ```nuxt.config.ts
 export default defineNuxtConfig({
@@ -63,6 +64,24 @@ export default defineNuxtConfig({
     },
 })
 ```
+Also, Multilinguist offers a functionality to set the default browser's locale as default if it is available in the supported languages array.
+
+To disable this option, you can set the `setBrowserLanguage` option to `false` as it is `true` by default:
+
+```nuxt.config.ts
+export default defineNuxtConfig({
+    modules: [
+        "@yiiamee/multilinguist",
+    ],
+    multilinguist: {
+        defaultLocale: "en",
+        supportedLanguages: ["en", "es"],
+        logging: false,
+        setBrowserLanguage: false, // by default: true
+    },
+})
+```
+
 
 # Usage
 
@@ -166,6 +185,32 @@ And validation:
 <template>
   <h3>{{ pageTitle }}</h3>
   <h6>Current Locale: {{ locale }}</h6>
+  <button @click="setLocale('es')">{{ t("Switch Locale") }}</button>
+</template>
+```
+
+### Get locales list
+
+```vue
+
+<script setup lang="ts">
+  const { t, setLocale, locale, locales } = useMultilinguist();
+  // Locales is a computed ref, which value is being set from your nuxt.config
+
+  const pageTitle = computed(() => {
+    return t("Hello, World");
+  });
+</script>
+
+<template>
+  <h3>{{ pageTitle }}</h3>
+  <h6>Current Locale: {{ locale }}</h6>
+  <span
+    v-for="localeItem from locales"
+    :key="localeItem"
+  >
+    | {{ localeItem }} |
+  </span>
   <button @click="setLocale('es')">{{ t("Switch Locale") }}</button>
 </template>
 ```

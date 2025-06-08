@@ -1,7 +1,7 @@
 import useLocale from "../composables/useLocale";
-import {useCookie, useState} from "nuxt/app";
-import {computed, watch, type Ref} from "vue";
-import type {LocaleKey, TranslationMessages} from "../types/generated-locales";
+import { useCookie, useState } from "nuxt/app";
+import { computed, watch, type Ref, type ComputedRef } from "vue";
+import type { LocaleKey, TranslationMessages } from "../types/generated-locales";
 
 export type TranslationMap = readonly string[];
 export type Locale<T extends TranslationMap> = T[number];
@@ -13,21 +13,29 @@ export type TMultilinguistResponse<T extends TranslationMap> = {
   setLocale: (locale: Locale<T>) => void;
   initLocalization: () => Promise<void>;
   locale: Ref<Locale<T>>;
+  locales: ComputedRef<T>;
 };
 
 export default function useLocalization<const T extends TranslationMap>(
   supportedLanguages: T,
   defaultLocale: Locale<T>,
+  setBrowserLanguage: boolean = true,
 ): TMultilinguistResponse<T> {
-  const {locale: userBrowserLocale} = useLocale(supportedLanguages, defaultLocale);
+  const { locale: userBrowserLocale } = useLocale(supportedLanguages, defaultLocale);
 
   const userSelectedLocale = useCookie("multilinguist-locale", {
-    default: () => supportedLanguages.includes(userBrowserLocale.value) ? userBrowserLocale.value : defaultLocale
+    default: () =>
+      supportedLanguages.includes(userBrowserLocale.value) && setBrowserLanguage
+        ? userBrowserLocale.value
+        : defaultLocale,
   });
 
-  const localeFiles: Record<string, {
-    default: LocaleKeys<T>
-  }> = import.meta.glob('@/public/locales/*.json', {eager: true});
+  const localeFiles: Record<
+    string,
+    {
+      default: LocaleKeys<T>;
+    }
+  > = import.meta.glob("@/public/locales/*.json", { eager: true });
 
   const loadedLanguages = useState<Partial<Record<Locale<T>, LocaleKeys<T>>>>("loaded-languages", () => ({}));
 
@@ -84,6 +92,10 @@ export default function useLocalization<const T extends TranslationMap>(
     await setLocale(userPrefferableLocale.value);
   };
 
+  const locales = computed(() => {
+    return supportedLanguages;
+  });
+
   watch(
     () => locale.value,
     async val => {
@@ -98,5 +110,6 @@ export default function useLocalization<const T extends TranslationMap>(
     setLocale,
     initLocalization,
     locale,
+    locales,
   };
 }

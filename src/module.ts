@@ -5,7 +5,7 @@ export default defineNuxtModule({
   meta: {
     name: "@yiiamee/multilinguist",
     configKey: "multilinguist",
-    version: "1.3.0",
+    version: "1.3.1",
     compatibility: {
       nuxt: "^3.0.0",
     },
@@ -13,6 +13,7 @@ export default defineNuxtModule({
       logging: true,
       defaultLocale: "",
       supportedLanguages: [],
+      setBrowserLanguage: true,
     },
   },
   setup(moduleOptions, nuxtApp) {
@@ -25,6 +26,8 @@ export default defineNuxtModule({
       defaultLocale: moduleOptions.defaultLocale,
       supportedLanguages: moduleOptions.supportedLanguages,
       logging: typeof moduleOptions.logging === "boolean" ? moduleOptions.logging : true,
+      setBrowserLanguage:
+        typeof moduleOptions.setBrowserLanguage === "boolean" ? moduleOptions.setBrowserLanguage : true,
     };
 
     nuxtApp.hook("vite:extendConfig", viteConfig => {
