@@ -2,7 +2,6 @@ import useLocale from "../composables/useLocale";
 import { useCookie, useState, useRuntimeConfig } from "nuxt/app";
 import { computed, watch, type Ref, type ComputedRef } from "vue";
 import type { LocaleKey, TranslationMessages } from "../types/generated-locales";
-import { localeFiles } from "../types/locale-imports";
 
 export type TranslationMap = readonly string[];
 export type Locale<T extends TranslationMap> = T[number];
@@ -36,22 +35,42 @@ export default function useLocalization<const T extends TranslationMap>(
 
   const loadLocaleMessages = async (locale: Locale<T>) => {
     if (!loadedLanguages.value[locale]) {
-      // Get the configured locales path
-      const localesPath = config.public.multilinguist.localesPath || "./public/locales";
-      const normalizedPath = localesPath.startsWith("./")
-        ? localesPath.slice(1)
-        : localesPath.startsWith("/")
-          ? localesPath
-          : `/${localesPath}`;
+      try {
+        // Get the configured locales path
+        const localesPath = config.public.multilinguist.localesPath || "./public/locales";
+        const normalizedPath = localesPath.startsWith("./")
+          ? localesPath.slice(2) // Remove "./"
+          : localesPath.startsWith("/")
+            ? localesPath.slice(1) // Remove leading "/"
+            : localesPath;
 
-      const fileKey = `${normalizedPath}/${locale}.json`;
-      const messages = localeFiles[fileKey];
+        let messages: any;
 
-      if (messages) {
-        loadedLanguages.value[locale] = messages.default;
-      } else {
-        console.error(`Available locale files:`, Object.keys(localeFiles));
-        throw new Error(`Locale file ${fileKey} not found`);
+        if (import.meta.server) {
+          // On server side, read from file system using the resolved path
+          const { readFileSync, existsSync } = await import("fs");
+          const { join } = await import("path");
+
+          const resolvedPath = config.multilinguist?.resolvedLocalesPath;
+          const filePath = join(resolvedPath, `${locale}.json`);
+
+          if (!existsSync(filePath)) {
+            throw new Error(`Locale file not found: ${filePath}`);
+          }
+
+          const fileContent = readFileSync(filePath, "utf-8");
+          messages = JSON.parse(fileContent);
+        } else {
+          // On client side, fetch from public directory
+          const url = `/${normalizedPath}/${locale}.json`;
+          const response = await $fetch(url);
+          messages = response;
+        }
+
+        loadedLanguages.value[locale] = messages;
+      } catch (error) {
+        console.error(`Failed to load locale '${locale}':`, error);
+        throw new Error(`Locale file for '${locale}' not found at configured path`);
       }
     }
   };

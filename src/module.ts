@@ -6,7 +6,7 @@ export default defineNuxtModule({
   meta: {
     name: "@yiiamee/multilinguist",
     configKey: "multilinguist",
-    version: "1.5.0",
+    version: "1.5.1",
     compatibility: {
       nuxt: "^3.0.0 || ^4.0.0",
     },
@@ -37,6 +37,11 @@ export default defineNuxtModule({
       localesPath: localesPath,
     };
 
+    // Pass the resolved path to runtime config for server-side access
+    nuxtApp.options.runtimeConfig.multilinguist = {
+      resolvedLocalesPath: resolvedLocalesPath,
+    };
+
     nuxtApp.hook("vite:extendConfig", viteConfig => {
       viteConfig.plugins = viteConfig.plugins || [];
       viteConfig.plugins.push(
@@ -45,9 +50,6 @@ export default defineNuxtModule({
           resolvedLocalesPath,
           resolver.resolve("./runtime/types/generated-locales.d.ts"),
           moduleOptions.logging,
-          localesPath,
-          moduleOptions.supportedLanguages,
-          nuxtApp.options.rootDir, // Pass the project root
         ),
       );
     });
@@ -56,9 +58,19 @@ export default defineNuxtModule({
       references.push({
         path: resolver.resolve("./runtime/types/generated-locales.d.ts"),
       });
-      references.push({
-        path: resolver.resolve("./runtime/types/locale-imports.ts"),
-      });
     });
+
+    // Ensure locale files are copied to public directory if they're not already there
+    if (!localesPath.includes("public")) {
+      // Add a Nitro plugin to serve locale files
+      nuxtApp.hook("nitro:config", async nitroConfig => {
+        nitroConfig.publicAssets = nitroConfig.publicAssets || [];
+        nitroConfig.publicAssets.push({
+          dir: resolvedLocalesPath,
+          maxAge: 60 * 60 * 24 * 7, // 1 week
+          baseURL: `/${localesPath.replace(/^\.\//, "").replace(/^public\//, "")}`,
+        });
+      });
+    }
   },
 });
