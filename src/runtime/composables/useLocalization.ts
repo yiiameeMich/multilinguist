@@ -1,7 +1,8 @@
 import useLocale from "../composables/useLocale";
-import { useCookie, useState } from "nuxt/app";
+import { useCookie, useState, useRuntimeConfig } from "nuxt/app";
 import { computed, watch, type Ref, type ComputedRef } from "vue";
 import type { LocaleKey, TranslationMessages } from "../types/generated-locales";
+import { localeFiles } from "../types/locale-imports";
 
 export type TranslationMap = readonly string[];
 export type Locale<T extends TranslationMap> = T[number];
@@ -22,6 +23,7 @@ export default function useLocalization<const T extends TranslationMap>(
   setBrowserLanguage: boolean = true,
 ): TMultilinguistResponse<T> {
   const { locale: userBrowserLocale } = useLocale(supportedLanguages, defaultLocale);
+  const config = useRuntimeConfig();
 
   const userSelectedLocale = useCookie("multilinguist-locale", {
     default: () =>
@@ -30,22 +32,25 @@ export default function useLocalization<const T extends TranslationMap>(
         : defaultLocale,
   });
 
-  const localeFiles: Record<
-    string,
-    {
-      default: LocaleKeys<T>;
-    }
-  > = import.meta.glob("@/public/locales/*.json", { eager: true });
-
   const loadedLanguages = useState<Partial<Record<Locale<T>, LocaleKeys<T>>>>("loaded-languages", () => ({}));
 
   const loadLocaleMessages = async (locale: Locale<T>) => {
     if (!loadedLanguages.value[locale]) {
-      const fileKey = `/public/locales/${locale}.json`;
-      const messages: { default: LocaleKeys<T> } = localeFiles[fileKey];
+      // Get the configured locales path
+      const localesPath = config.public.multilinguist.localesPath || "./public/locales";
+      const normalizedPath = localesPath.startsWith("./")
+        ? localesPath.slice(1)
+        : localesPath.startsWith("/")
+          ? localesPath
+          : `/${localesPath}`;
+
+      const fileKey = `${normalizedPath}/${locale}.json`;
+      const messages = localeFiles[fileKey];
+
       if (messages) {
-        loadedLanguages.value[locale] = messages?.default;
+        loadedLanguages.value[locale] = messages.default;
       } else {
+        console.error(`Available locale files:`, Object.keys(localeFiles));
         throw new Error(`Locale file ${fileKey} not found`);
       }
     }

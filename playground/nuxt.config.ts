@@ -4,6 +4,7 @@ export default defineNuxtConfig({
     defaultLocale: "en",
     supportedLanguages: ["en", "es"],
     logging: false,
+    localesPath: "./locales",
   },
   devtools: { enabled: true },
 });
