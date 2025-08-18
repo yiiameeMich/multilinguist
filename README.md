@@ -31,7 +31,7 @@ export default defineNuxtConfig({
 })
 ```
 
-Then, create a "locales" directory in /public directory. This is necessary for module to access your languages.
+Then, create a "locales" directory in root directory of your project.
 
 ![directory_structure.png](directory_structure.png)
 
@@ -82,6 +82,24 @@ export default defineNuxtConfig({
 })
 ```
 
+Also, if you want to use a different folder name for your locales' files, or you want to specify other path to the directory, you can set the `localesPath` option in your nuxt.config:
+
+```nuxt.config.ts
+export default defineNuxtConfig({
+    modules: [
+        "@yiiamee/multilinguist",
+    ],
+    multilinguist: {
+        defaultLocale: "en",
+        supportedLanguages: ["en", "es"],
+        logging: false,
+        setBrowserLanguage: false, // by default: true
+        localesPath: "./languages", // by default: "./locales"
+    },
+})
+```
+
+### Important! Keep in mind, that it is not recommended to use "public" folder for your locales' files, as it may lead to rendering, security and other issues.
 
 # Usage
 

@@ -6,7 +6,7 @@ export default defineNuxtModule({
   meta: {
     name: "@yiiamee/multilinguist",
     configKey: "multilinguist",
-    version: "1.5.1",
+    version: "1.5.2",
     compatibility: {
       nuxt: "^3.0.0 || ^4.0.0",
     },
@@ -15,14 +15,14 @@ export default defineNuxtModule({
       defaultLocale: "",
       supportedLanguages: [],
       setBrowserLanguage: true,
-      localesPath: "./public/locales",
+      localesPath: "./locales",
     },
   },
   setup(moduleOptions, nuxtApp) {
     const resolver = createResolver(import.meta.url);
 
     // Ensure localesPath has a default value and resolve it
-    const localesPath = moduleOptions.localesPath || "./public/locales";
+    const localesPath = moduleOptions.localesPath || "./locales";
     const resolvedLocalesPath = resolve(nuxtApp.options.rootDir, localesPath);
 
     addPlugin(resolver.resolve("runtime/plugin"));

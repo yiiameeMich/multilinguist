@@ -37,7 +37,7 @@ export default function useLocalization<const T extends TranslationMap>(
     if (!loadedLanguages.value[locale]) {
       try {
         // Get the configured locales path
-        const localesPath = config.public.multilinguist.localesPath || "./public/locales";
+        const localesPath = config.public.multilinguist.localesPath || "./locales";
         const normalizedPath = localesPath.startsWith("./")
           ? localesPath.slice(2) // Remove "./"
           : localesPath.startsWith("/")
