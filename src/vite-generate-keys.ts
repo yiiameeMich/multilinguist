@@ -53,13 +53,12 @@ declare module 'vue' {
 
 export default function GenerateLocaleKeysPlugin(
   defaultLocaleFromConfig: string,
-  localesPath: string,
+  absoluteLocalesPath: string,
   outPath: string,
   logging: boolean = true,
 ): Plugin {
   async function generateTypes() {
-    const defaultLocalePath = path.join(localesPath, `${defaultLocaleFromConfig}.json`);
-    console.log(defaultLocalePath);
+    const defaultLocalePath = path.join(absoluteLocalesPath, `${defaultLocaleFromConfig}.json`);
 
     if (!fs.existsSync(defaultLocalePath)) {
       console?.error(`❌ Default locale file not found: ${defaultLocalePath}`);
@@ -87,7 +86,7 @@ export default function GenerateLocaleKeysPlugin(
     },
 
     async handleHotUpdate(ctx) {
-      if (ctx.file.endsWith(".json") && ctx.file.includes(localesPath)) {
+      if (ctx.file.endsWith(".json") && ctx.file.includes(absoluteLocalesPath)) {
         await generateTypes();
       }
     },

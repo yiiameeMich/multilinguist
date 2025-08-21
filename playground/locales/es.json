@@ -1,0 +1,12 @@
+{
+  "Hello, World": "Hola, Mundo",
+  "Switch Locale": "Cambiar configuración regional",
+  "Paste your variable here": "Aquí está tu variable: {variable}",
+  "nested": {
+    "Nested key": "Llave anidada",
+    "Language": "Español",
+    "nested second level": {
+      "nested second level language": "test spanish"
+    }
+  }
+}
