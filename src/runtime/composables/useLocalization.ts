@@ -35,18 +35,25 @@ export default function useLocalization<const T extends TranslationMap>(
     {
       default: LocaleKeys<T>;
     }
-  > = import.meta.glob("@/public/locales/*.json", { eager: true });
+  > = import.meta.glob("@@/public/locales/*.json", { eager: true });
 
   const loadedLanguages = useState<Partial<Record<Locale<T>, LocaleKeys<T>>>>("loaded-languages", () => ({}));
 
   const loadLocaleMessages = async (locale: Locale<T>) => {
     if (!loadedLanguages.value[locale]) {
-      const fileKey = `/public/locales/${locale}.json`;
-      const messages: { default: LocaleKeys<T> } = localeFiles[fileKey];
+      const fileKeyVersion4 = `../public/locales/${locale}.json`;
+      const fileKeyVersion3 = `/public/locales/${locale}.json`;
+
+      const messages: { default: LocaleKeys<T> } = localeFiles[fileKeyVersion4] || localeFiles[fileKeyVersion3];
+
       if (messages) {
         loadedLanguages.value[locale] = messages?.default;
       } else {
-        throw new Error(`Locale file ${fileKey} not found`);
+        if (!localeFiles[fileKeyVersion4]) {
+          throw new Error(`Locale file ${localeFiles[fileKeyVersion4]} not found`);
+        } else {
+          throw new Error(`Locale file ${localeFiles[fileKeyVersion3]} not found`);
+        }
       }
     }
   };

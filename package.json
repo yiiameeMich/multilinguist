@@ -1,6 +1,6 @@
 {
   "name": "@yiiamee/multilinguist",
-  "version": "1.4.2",
+  "version": "1.6.0",
   "description": "Nuxt Multilinguist module for localizations",
   "repository": "yiiameeMich/multilinguist",
   "license": "MIT",
@@ -65,7 +65,7 @@
     "@types/node": "latest",
     "changelogen": "^0.6.1",
     "eslint": "^9.27.0",
-    "nuxt": "^4.0.1",
+    "nuxt": "^4.0.3",
     "typescript": "~5.8.3",
     "vitest": "^3.1.4",
     "vue-tsc": "^2.2.10"

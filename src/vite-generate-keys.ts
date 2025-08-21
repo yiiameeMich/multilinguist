@@ -59,6 +59,7 @@ export default function GenerateLocaleKeysPlugin(
 ): Plugin {
   async function generateTypes() {
     const defaultLocalePath = path.join(localesPath, `${defaultLocaleFromConfig}.json`);
+    console.log(defaultLocalePath);
 
     if (!fs.existsSync(defaultLocalePath)) {
       console?.error(`❌ Default locale file not found: ${defaultLocalePath}`);
