@@ -5,7 +5,7 @@ export default defineNuxtModule({
   meta: {
     name: "@yiiamee/multilinguist",
     configKey: "multilinguist",
-    version: "1.6.0",
+    version: "1.6.1",
     compatibility: {
       nuxt: "^3.0.0 || ^4.0.0",
     },

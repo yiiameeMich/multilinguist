@@ -1,6 +1,6 @@
 import useLocale from "../composables/useLocale";
 import { useCookie, useState } from "nuxt/app";
-import { computed, watch, type Ref, type ComputedRef } from "vue";
+import { computed, type ComputedRef, type Ref, watch } from "vue";
 import type { LocaleKey, TranslationMessages } from "../types/generated-locales";
 
 export type TranslationMap = readonly string[];
@@ -62,7 +62,7 @@ export default function useLocalization<const T extends TranslationMap>(
     return userSelectedLocale.value ? userSelectedLocale.value : userBrowserLocale.value;
   });
 
-  const locale = useState<Locale<T>>(() => {
+  const locale = useState<Locale<T>>("current-locale-multilinguist", () => {
     return userPrefferableLocale.value || defaultLocale;
   });
 
